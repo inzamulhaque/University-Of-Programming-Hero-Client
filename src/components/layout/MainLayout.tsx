@@ -7,17 +7,19 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Outlet } from "react-router-dom";
+import sidebarItemsGenerator from "../../utils/sidebarItemsGenerator";
+import { adminPaths } from "../../routes/admin.routes";
 
-const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  UserOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: createElement(icon),
-  label: `nav ${index + 1}`,
-}));
+// const items = [
+//   UserOutlined,
+//   VideoCameraOutlined,
+//   UploadOutlined,
+//   UserOutlined,
+// ].map((icon, index) => ({
+//   key: String(index + 1),
+//   icon: createElement(icon),
+//   label: `nav ${index + 1}`,
+// }));
 
 const MainLayout = () => {
   return (
@@ -48,7 +50,7 @@ const MainLayout = () => {
             theme="dark"
             mode="inline"
             defaultSelectedKeys={["4"]}
-            items={items}
+            items={sidebarItemsGenerator(adminPaths, "admin")}
           />
         </Sider>
         <Layout>
