@@ -8,6 +8,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { logout, setUser } from "../features/auth/authSlice";
+import { toast } from "sonner";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:7000/api/v1",
@@ -29,7 +30,12 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   DefinitionType
 > = async (args, api, extraOptions): Promise<any> => {
   let result = await baseQuery(args, api, extraOptions);
-  if (result?.error?.status === 500) {
+
+  if (result?.error?.status === 404) {
+    toast.error("User Not Fount");
+  }
+
+  if (result?.error?.status === 401) {
     const res = await fetch("http://localhost:7000/api/v1/auth/refresh-token", {
       method: "POST",
       credentials: "include",
