@@ -15,10 +15,18 @@ const MainLayout = () => {
 
   return (
     <>
-      <Layout style={{ height: "100vh" }}>
+      <Layout style={{ minHeight: "100vh", height: "100%" }}>
         <Sidebar />
         <Layout>
-          <Header style={{ padding: 0 }}>
+          <Header
+            style={{
+              padding: 0,
+              position: "sticky",
+              top: 0,
+              right: 0,
+              zIndex: 9,
+            }}
+          >
             <Button onClick={handleLogout}>Logout</Button>
           </Header>
           <Content style={{ margin: "24px 16px 0" }}>
