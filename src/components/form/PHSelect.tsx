@@ -5,9 +5,10 @@ type TPHSelectProps = {
   label: string;
   name: string;
   options: { value: string; label: string; disabled?: boolean }[];
+  placeholder?: string;
 };
 
-const PHSelect = ({ label, name, options }: TPHSelectProps) => {
+const PHSelect = ({ label, name, options, placeholder }: TPHSelectProps) => {
   return (
     <Controller
       name={name}
@@ -16,7 +17,7 @@ const PHSelect = ({ label, name, options }: TPHSelectProps) => {
           <Select
             style={{ width: "100%" }}
             {...field}
-            defaultValue={options[0]}
+            placeholder={placeholder ?? null}
             options={options}
             size="large"
           />
