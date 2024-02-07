@@ -45,6 +45,8 @@ const CreateStudent = () => {
 
     addStudent(formData);
 
+    console.log(data);
+
     // formData.append("test", "data");
     // console.log(formData.get("test"));
     // console.log([...formData.entries()]);
