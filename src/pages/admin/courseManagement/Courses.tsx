@@ -8,6 +8,7 @@ import PHForm from "../../../components/form/PHForm";
 import PHSelect from "../../../components/form/PHSelect";
 import { useGetAcademicFacultiesQuery } from "../../../redux/features/admin/academicManagement.api";
 import { useGetAllFacultiesQuery } from "../../../redux/features/admin/userManagement.api";
+import { toast } from "sonner";
 
 const Courses = () => {
   // const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
@@ -63,15 +64,23 @@ const AddFacultyModal = ({ facultyInfo }: Record<string, unknown>) => {
   );
 
   const handleSubmit = async (data: any) => {
-    console.log(data);
+    const toastId = toast.loading("Adding...");
+    try {
+      const facultyData = {
+        courseId: facultyInfo?.key,
+        data,
+      };
+
+      addFaculties(facultyData);
+      setIsModalOpen(false);
+      toast.success("Added", { id: toastId });
+    } catch (error) {
+      toast.error("Something went wrong", { id: toastId });
+    }
   };
 
   const showModal = () => {
     setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -84,8 +93,8 @@ const AddFacultyModal = ({ facultyInfo }: Record<string, unknown>) => {
       <Modal
         title="Assign Faculty"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
+        footer={null}
       >
         <PHForm onSubmit={handleSubmit}>
           <PHSelect
