@@ -11,46 +11,48 @@ import PHInput from "../components/form/PHInput";
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
 
   const defaultValues = {
-    id: "2024010001",
-    password: "123456",
+    userId: "2024010001",
+    password: "1234567",
   };
 
-  const onSubmit = async (info: FieldValues) => {
-    const loadingToastId = toast.loading("Login in proccess! Please wait");
+  const [login] = useLoginMutation();
+
+  const onSubmit = async (data: FieldValues) => {
+    console.log(data);
+    const toastId = toast.loading("Logging in");
+
     try {
-      const res = await login(info).unwrap();
+      const userInfo = {
+        id: data.userId,
+        password: data.password,
+      };
+      const res = await login(userInfo).unwrap();
 
-      const userInfo = verifyToken(res.data.accessToken) as TUser;
+      const user = verifyToken(res.data.accessToken) as TUser;
+      dispatch(setUser({ user: user, token: res.data.accessToken }));
+      toast.success("Logged in", { id: toastId, duration: 2000 });
 
-      dispatch(setUser({ user: userInfo, token: res.data.accessToken }));
-      toast.success("Loging successful", {
-        id: loadingToastId,
-        duration: 3000,
-      });
-      navigate(`/${userInfo.role! as string}/dashboard`);
-    } catch (error) {
-      toast.error("Something went wrong! Please try again", {
-        id: loadingToastId,
-      });
+      if (res.data.needsPasswordChange) {
+        navigate(`/change-password`);
+      } else {
+        navigate(`/${user.role}/dashboard`);
+      }
+    } catch (err) {
+      toast.error("Something went wrong", { id: toastId, duration: 2000 });
     }
   };
+
   return (
-    <>
-      <Row justify="center" align="middle" style={{ height: "100vh" }}>
-        <PHForm onSubmit={onSubmit} defaultValues={defaultValues}>
-          <PHInput type="text" name="id" label="ID:" />
-
-          <PHInput type="text" name="password" label="Password:" />
-
-          <Button htmlType="submit">Login</Button>
-        </PHForm>
-      </Row>
-    </>
+    <Row justify="center" align="middle" style={{ height: "100vh" }}>
+      <PHForm onSubmit={onSubmit} defaultValues={defaultValues}>
+        <PHInput type="text" name="userId" label="ID:" />
+        <PHInput type="text" name="password" label="Password" />
+        <Button htmlType="submit">Login</Button>
+      </PHForm>
+    </Row>
   );
 };
 
